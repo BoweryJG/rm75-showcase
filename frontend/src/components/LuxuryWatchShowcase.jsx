@@ -34,8 +34,8 @@ import * as THREE from 'three'
 import { useControls } from 'leva'
 import HyperRealCrystal from './materials/HyperRealCrystal'
 import TourbillonMechanism from './TourbillonMechanism'
-import QuantumZoomControls from './QuantumZoomControls'
 import { KernelSize, BlendFunction } from 'postprocessing'
+import QuantumZoomCamera from './QuantumZoomCamera'
 
 // Hyper-reality lighting setup
 function LuxuryLighting() {
@@ -322,7 +322,7 @@ export default function LuxuryWatchShowcase({ variant, dataMode }) {
         </EffectComposer>
       )}
       
-      <QuantumZoomControls />
+      <QuantumZoomCamera />
     </>
   )
 }
