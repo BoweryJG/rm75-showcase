@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
 import LuxuryWatchShowcase from './components/LuxuryWatchShowcase'
 import SupabaseDataLayer from './components/SupabaseDataLayer'
+import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
 function App() {
@@ -10,8 +11,9 @@ function App() {
   const [selectedVariant, setSelectedVariant] = useState('clear-sapphire')
 
   return (
-    <div className="app-container">
-      <Canvas
+    <ErrorBoundary>
+      <div className="app-container">
+        <Canvas
         shadows
         dpr={[1, 2]}
         camera={{ position: [0, 0, 5], fov: 35 }}
@@ -69,6 +71,7 @@ function App() {
       
       <Loader />
     </div>
+    </ErrorBoundary>
   )
 }
 

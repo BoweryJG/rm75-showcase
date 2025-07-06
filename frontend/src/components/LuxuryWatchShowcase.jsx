@@ -160,13 +160,11 @@ function RichardMilleWatch({ variant, dataMode }) {
         <cylinderGeometry args={[2.0, 1.95, 0.3, 128, 64]} />
         <MeshTransmissionMaterial
           {...currentMaterial}
-          samples={32}
-          resolution={2048}
+          samples={gpu.tier > 2 ? 16 : 8}
+          resolution={gpu.tier > 2 ? 1024 : 512}
           temporalDistortion={0.1}
           distortion={0.1}
           distortionScale={0.1}
-          maxDepthThreshold={0.1}
-          minDepthThreshold={0.0}
         />
       </mesh>
       
@@ -223,7 +221,7 @@ export default function LuxuryWatchShowcase({ variant, dataMode }) {
       <LuxuryLighting />
       
       <Environment
-        files="/textures/hdri/luxury_showroom_16k.hdr"
+        preset="city"
         resolution={gpu.tier > 2 ? 2048 : 1024}
         background={false}
       >
@@ -300,37 +298,29 @@ export default function LuxuryWatchShowcase({ variant, dataMode }) {
         />
       </mesh>
       
-      {/* Hyper-realistic post-processing */}
-      <EffectComposer multisampling={gpu.tier > 2 ? 8 : 4}>
-        <Bloom
-          intensity={bloomIntensity}
-          kernelSize={KernelSize.VERY_LARGE}
-          luminanceThreshold={0.5}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
-        <ChromaticAberration
-          offset={[chromaticAberration, chromaticAberration]}
-          radialModulation
-          modulationOffset={0.5}
-        />
-        <DepthOfField
-          focusDistance={0.01}
-          focalLength={depthOfField}
-          bokehScale={4}
-          height={480}
-        />
-        <ToneMapping
-          blendFunction={BlendFunction.NORMAL}
-          adaptive
-          resolution={256}
-          middleGrey={0.6}
-          maxLuminance={16.0}
-          averageLuminance={1.0}
-          adaptationRate={1.0}
-        />
-        {gpu.tier > 2 && <N8AO aoRadius={0.5} intensity={1} />}
-      </EffectComposer>
+      {/* Post-processing - simplified for performance */}
+      {gpu.tier > 1 && (
+        <EffectComposer multisampling={gpu.tier > 2 ? 4 : 0}>
+          <Bloom
+            intensity={bloomIntensity}
+            kernelSize={KernelSize.LARGE}
+            luminanceThreshold={0.5}
+            luminanceSmoothing={0.9}
+          />
+          {gpu.tier > 2 && (
+            <>
+              <ChromaticAberration
+                offset={[chromaticAberration, chromaticAberration]}
+              />
+              <DepthOfField
+                focusDistance={0.01}
+                focalLength={depthOfField}
+                bokehScale={2}
+              />
+            </>
+          )}
+        </EffectComposer>
+      )}
       
       <QuantumZoomControls />
     </>
