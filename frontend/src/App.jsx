@@ -7,7 +7,7 @@ import './App.css'
 
 // Lazy load heavy components for better initial load on iPhones
 const LuxuryWatchShowcase = lazy(() => import('./components/LuxuryWatchShowcase'))
-const SupabaseDataLayer = lazy(() => import('./components/SupabaseDataLayer'))
+const SupabaseDataLayer = lazy(() => import('./components/SupabaseDataLayerFixed'))
 const PerformanceMonitor = lazy(() => import('./components/PerformanceMonitor'))
 
 function App() {
