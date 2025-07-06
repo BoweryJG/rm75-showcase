@@ -4,12 +4,9 @@ import {
   Environment, 
   PresentationControls, 
   ContactShadows,
-  MeshTransmissionMaterial,
-  Float,
-  useDetectGPU
+  Float
 } from '@react-three/drei'
 import * as THREE from 'three'
-import TourbillonMechanism from './TourbillonMechanism'
 
 // iPhone-optimized lighting setup
 function OptimizedLighting() {
@@ -58,176 +55,71 @@ function useDeviceCapabilities() {
   return { isMobile, isLowEnd }
 }
 
-// RM 75-01 Authentic Watch Component
+// Emergency Ultra-Minimal RM 75-01 - GPU Safe
 function RichardMilleRM75({ variant }) {
   const watchRef = useRef()
-  const crystalRef = useRef()
-  const tourbillonRef = useRef()
-  const { isMobile, isLowEnd } = useDeviceCapabilities()
   
-  // iPhone-optimized material variants
-  const materials = useMemo(() => ({
-    'clear-sapphire': {
-      transmission: 0.95,
-      thickness: 1.0,
-      roughness: 0.02,
-      ior: 1.77,
-      color: new THREE.Color(0.98, 0.98, 1.0),
-      envMapIntensity: 1.0,
-    },
-    'lilac-pink': {
-      transmission: 0.9,
-      thickness: 1.0,
-      roughness: 0.03,
-      ior: 1.77,
-      color: new THREE.Color(1.0, 0.85, 0.95),
-      envMapIntensity: 0.8,
-    },
-    'sapphire-blue': {
-      transmission: 0.85,
-      thickness: 1.0,
-      roughness: 0.025,
-      ior: 1.77,
-      color: new THREE.Color(0.7, 0.85, 1.0),
-      envMapIntensity: 0.9,
-    }
-  }), [])
+  // Ultra-simple materials to prevent GPU overload
+  const variantColors = {
+    'clear-sapphire': '#f0f0f0',
+    'lilac-pink': '#ffb3d9', 
+    'sapphire-blue': '#6bb6ff'
+  }
 
-  const currentMaterial = materials[variant]
-  
-  // Optimized geometry LOD based on device
-  const geometry = useMemo(() => {
-    const segments = isMobile ? 16 : isLowEnd ? 24 : 32
-    return {
-      case: [1.8, 1.6, 0.6, segments],       // Tonneau-shaped case (RM signature)
-      crystal: [1.7, 1.5, 0.2, segments],    // Sapphire crystal
-      bezel: [1.9, 1.8, 0.1, segments]       // Bezel ring
-    }
-  }, [isMobile, isLowEnd])
-
-  // Smooth animations optimized for 30fps on mobile
+  // Minimal animation
   useFrame((state) => {
     if (watchRef.current) {
-      // Gentle breathing animation
-      const time = state.clock.elapsedTime
-      watchRef.current.position.y = Math.sin(time * 0.5) * 0.01
-      watchRef.current.rotation.y = Math.sin(time * 0.2) * 0.02
+      watchRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1
     }
   })
 
   return (
     <group ref={watchRef}>
-      {/* RM 75-01 Tonneau Case (Signature RM shape) */}
-      <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <boxGeometry args={[3.2, 4.8, 1.2]} />
-        <meshPhysicalMaterial
-          color="#2a2a2a"
-          metalness={0.9}
-          roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.5}
+      {/* Ultra-simple tonneau case */}
+      <mesh position={[0, 0, 0]}>
+        <boxGeometry args={[3, 4.5, 1]} />
+        <meshStandardMaterial
+          color="#333333"
+          metalness={0.8}
+          roughness={0.2}
         />
       </mesh>
       
-      {/* Rounded corners for tonneau shape */}
-      <mesh position={[1.4, 2.0, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
-        <meshPhysicalMaterial
-          color="#2a2a2a"
-          metalness={0.9}
+      {/* Simple crystal - no transmission material */}
+      <mesh position={[0, 0, 0.6]}>
+        <boxGeometry args={[2.6, 4.2, 0.2]} />
+        <meshStandardMaterial
+          color={variantColors[variant]}
+          transparent
+          opacity={0.7}
+          metalness={0.1}
           roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-      <mesh position={[-1.4, 2.0, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
-        <meshPhysicalMaterial
-          color="#2a2a2a"
-          metalness={0.9}
-          roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-      <mesh position={[1.4, -2.0, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
-        <meshPhysicalMaterial
-          color="#2a2a2a"
-          metalness={0.9}
-          roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.5}
-        />
-      </mesh>
-      <mesh position={[-1.4, -2.0, 0]} castShadow receiveShadow>
-        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
-        <meshPhysicalMaterial
-          color="#2a2a2a"
-          metalness={0.9}
-          roughness={0.1}
-          clearcoat={0.8}
-          clearcoatRoughness={0.1}
-          envMapIntensity={1.5}
         />
       </mesh>
       
-      {/* Sapphire Crystal - Proper RM 75-01 form */}
-      <mesh ref={crystalRef} position={[0, 0, 0.65]} castShadow>
-        <boxGeometry args={[2.8, 4.4, 0.3]} />
-        <MeshTransmissionMaterial
-          {...currentMaterial}
-          samples={isMobile ? 4 : 8}
-          resolution={isMobile ? 256 : 512}
+      {/* Simplified tourbillon placeholder */}
+      <mesh position={[0, -1.2, 0.5]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.1, 12]} />
+        <meshStandardMaterial
+          color="#gold"
+          metalness={0.9}
+          roughness={0.1}
         />
       </mesh>
       
-      {/* Flying Tourbillon at 6 o'clock position (RM 75-01 layout) */}
-      <TourbillonMechanism 
-        ref={tourbillonRef} 
-        position={[0, -1.2, 0.4]} 
-        scale={isMobile ? 0.8 : 1.0}
-        simplified={isMobile || isLowEnd}
-      />
-      
-      {/* Movement bridges - Gothic architecture inspired */}
-      <mesh position={[0, 0.8, 0.4]}>
-        <boxGeometry args={[2.4, 0.2, 0.1]} />
-        <meshPhysicalMaterial
-          color="#1a1a1a"
-          metalness={0.95}
-          roughness={0.05}
-        />
-      </mesh>
-      <mesh position={[0, -0.4, 0.4]}>
-        <boxGeometry args={[2.4, 0.2, 0.1]} />
-        <meshPhysicalMaterial
-          color="#1a1a1a"
-          metalness={0.95}
-          roughness={0.05}
-        />
-      </mesh>
-      
-      {/* SuperLuminova hour markers */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i * Math.PI * 2) / 12
-        const radius = 1.8
-        const x = Math.sin(angle) * radius
-        const y = Math.cos(angle) * radius
+      {/* Minimal hour markers - only 4 instead of 12 */}
+      {[0, 90, 180, 270].map((angle, i) => {
+        const rad = (angle * Math.PI) / 180
+        const x = Math.sin(rad) * 1.6
+        const y = Math.cos(rad) * 1.8
         
         return (
-          <mesh key={i} position={[x, y, 0.5]}>
-            <cylinderGeometry args={[0.05, 0.05, 0.02, 8]} />
-            <meshBasicMaterial
-              color={variant === 'lilac-pink' ? '#ff69b4' : 
-                     variant === 'sapphire-blue' ? '#4169e1' : '#ffffff'}
-              emissive={variant === 'lilac-pink' ? '#ff1493' : 
-                       variant === 'sapphire-blue' ? '#1e90ff' : '#ffffff'}
-              emissiveIntensity={0.3}
+          <mesh key={i} position={[x, y, 0.4]}>
+            <boxGeometry args={[0.1, 0.1, 0.05]} />
+            <meshStandardMaterial
+              color="#ffffff"
+              emissive="#ffffff"
+              emissiveIntensity={0.1}
             />
           </mesh>
         )
