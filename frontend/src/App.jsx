@@ -1,14 +1,19 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useState, lazy } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
-import LuxuryWatchShowcase from './components/LuxuryWatchShowcase'
-import SupabaseDataLayer from './components/SupabaseDataLayer'
 import ErrorBoundary from './components/ErrorBoundary'
+import LoadingPlaceholder from './components/LoadingPlaceholder'
 import './App.css'
+
+// Lazy load heavy components for better initial load on iPhones
+const LuxuryWatchShowcase = lazy(() => import('./components/LuxuryWatchShowcase'))
+const SupabaseDataLayer = lazy(() => import('./components/SupabaseDataLayer'))
+const PerformanceMonitor = lazy(() => import('./components/PerformanceMonitor'))
 
 function App() {
   const [dataMode, setDataMode] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState('clear-sapphire')
+  const [showPerformance, setShowPerformance] = useState(true)
 
   return (
     <ErrorBoundary>
@@ -27,11 +32,12 @@ function App() {
         }}
         performance={{ min: 0.5 }}
       >
-        <Suspense fallback={null}>
+        <Suspense fallback={<LoadingPlaceholder />}>
           <LuxuryWatchShowcase 
             variant={selectedVariant}
           />
           {dataMode && <SupabaseDataLayer variant={selectedVariant} />}
+          {showPerformance && <PerformanceMonitor />}
         </Suspense>
       </Canvas>
       
@@ -65,6 +71,17 @@ function App() {
               onChange={(e) => setDataMode(e.target.checked)}
             />
             <span>Data Enhancement Mode</span>
+          </label>
+        </div>
+        
+        <div className="mode-toggle" style={{ marginTop: '10px' }}>
+          <label>
+            <input 
+              type="checkbox" 
+              checked={showPerformance}
+              onChange={(e) => setShowPerformance(e.target.checked)}
+            />
+            <span>Show Performance</span>
           </label>
         </div>
       </div>
