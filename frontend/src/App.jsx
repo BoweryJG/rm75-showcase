@@ -1,7 +1,7 @@
 import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
-import LuxuryWatchShowcase from './components/LuxuryWatchShowcase'
+import SimpleWatchShowcase from './components/SimpleWatchShowcase'
 import SupabaseDataLayer from './components/SupabaseDataLayer'
 import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
