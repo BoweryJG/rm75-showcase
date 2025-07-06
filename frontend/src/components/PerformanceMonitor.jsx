@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react'
-import { useFrame } from '@react-three/fiber'
+import { useEffect, useState, useRef } from 'react'
+import { addEffect } from '@react-three/fiber'
 
 export default function PerformanceMonitor() {
   const [fps, setFps] = useState(60)
   const [device, setDevice] = useState('')
+  const frames = useRef(0)
+  const lastTime = useRef(performance.now())
   
   useEffect(() => {
     const ua = navigator.userAgent
@@ -20,20 +22,20 @@ export default function PerformanceMonitor() {
     }
     
     setDevice(deviceInfo)
+    
+    // Use addEffect for frame counting outside of Canvas context
+    const unsubscribe = addEffect(() => {
+      frames.current++
+      const currentTime = performance.now()
+      if (currentTime >= lastTime.current + 1000) {
+        setFps(Math.round((frames.current * 1000) / (currentTime - lastTime.current)))
+        frames.current = 0
+        lastTime.current = currentTime
+      }
+    })
+    
+    return () => unsubscribe()
   }, [])
-  
-  let frames = 0
-  let lastTime = performance.now()
-  
-  useFrame(() => {
-    frames++
-    const currentTime = performance.now()
-    if (currentTime >= lastTime + 1000) {
-      setFps(Math.round((frames * 1000) / (currentTime - lastTime)))
-      frames = 0
-      lastTime = currentTime
-    }
-  })
   
   const fpsColor = fps >= 50 ? '#0f0' : fps >= 30 ? '#ff0' : '#f00'
   

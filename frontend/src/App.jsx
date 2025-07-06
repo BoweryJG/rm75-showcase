@@ -37,9 +37,14 @@ function App() {
             variant={selectedVariant}
           />
           {dataMode && <SupabaseDataLayer variant={selectedVariant} />}
-          {showPerformance && <PerformanceMonitor />}
         </Suspense>
       </Canvas>
+      
+      {showPerformance && (
+        <Suspense fallback={null}>
+          <PerformanceMonitor />
+        </Suspense>
+      )}
       
       <div className="controls-overlay">
         <div className="variant-selector">
