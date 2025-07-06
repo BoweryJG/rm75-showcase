@@ -1,4 +1,4 @@
-import { Suspense, useState, lazy } from 'react'
+import { Suspense, useState, lazy, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -14,10 +14,18 @@ function App() {
   const [dataMode, setDataMode] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState('clear-sapphire')
   const [showPerformance, setShowPerformance] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => setIsLoading(false), 100)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <ErrorBoundary>
       <div className="app-container">
+        {isLoading && <LoadingPlaceholder />}
         <Canvas
         shadows
         dpr={[1, Math.min(window.devicePixelRatio, 2)]}
@@ -32,7 +40,7 @@ function App() {
         }}
         performance={{ min: 0.5 }}
       >
-        <Suspense fallback={<LoadingPlaceholder />}>
+        <Suspense fallback={null}>
           <LuxuryWatchShowcase 
             variant={selectedVariant}
           />
