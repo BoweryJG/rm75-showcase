@@ -1,0 +1,50 @@
+services:
+  # Backend API Service
+  - type: web
+    name: rm75-showcase-api
+    runtime: node
+    repo: https://github.com/yourusername/rm75-showcase # Update with your repo
+    branch: main
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://rm75-showcase.onrender.com # Update with your frontend URL
+      - key: PORT
+        value: 3001
+    healthCheckPath: /api/health
+    
+    # Optional: Auto-deploy on push
+    autoDeploy: true
+    
+    # Optional: Scaling configuration
+    plan: free # Options: free, starter, standard, pro
+    
+    # Optional: Custom domain
+    # domains:
+    #   - rm75-api.yourdomain.com
+
+# Static Site for Frontend (if deploying together)
+  - type: static
+    name: rm75-showcase-frontend
+    repo: https://github.com/yourusername/rm75-showcase # Update with your repo
+    branch: main
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://rm75-showcase-api.onrender.com # Update with your API URL
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

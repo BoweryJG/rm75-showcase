@@ -1,0 +1,13 @@
+Place your watch images in this directory with the following naming convention:
+- rm-075-01-front.jpg
+- rm-075-01-back.jpg
+- rm-075-01-side.jpg
+- rm-075-02-front.jpg
+- rm-075-02-back.jpg
+- rm-075-02-side.jpg
+
+Recommended image specifications:
+- Format: JPEG or WebP
+- Resolution: 1200x1200px minimum
+- Optimization: Compress images for web use
+- Background: Transparent or consistent color
