@@ -53,7 +53,7 @@ function FlyingTourbillon({ simplified = false }) {
       <group ref={cageRef}>
         <mesh>
           <torusGeometry args={[0.25, 0.015, 4, segments]} />
-          <meshPhongMaterial color="#1a1a1a" metalness={0.9} />
+          <meshPhongMaterial color="#1a1a1a" />
         </mesh>
         
         {/* Cage Arms */}
@@ -68,11 +68,11 @@ function FlyingTourbillon({ simplified = false }) {
         <group ref={balanceRef}>
           <mesh>
             <ringGeometry args={[0.08, 0.1, segments]} />
-            <meshPhongMaterial color="#b8860b" metalness={0.8} />
+            <meshPhongMaterial color="#b8860b" shininess={80} />
           </mesh>
           <mesh>
             <cylinderGeometry args={[0.005, 0.005, 0.1, 6]} />
-            <meshPhongMaterial color="#4169e1" metalness={0.95} />
+            <meshPhongMaterial color="#4169e1" shininess={95} />
           </mesh>
         </group>
       </group>
@@ -127,37 +127,6 @@ function RichardMilleRM75({ variant }) {
   
   const tonneauGeometry = useMemo(() => createTonneauGeometry(), [])
   
-  const materials = useMemo(() => ({
-    case: new THREE.MeshPhongMaterial({
-      color: '#1a1a1a',
-      shininess: 100,
-      specular: new THREE.Color(0.2, 0.2, 0.2)
-    }),
-    crystal: {
-      'clear-sapphire': new THREE.MeshPhongMaterial({
-        color: '#ffffff',
-        transparent: true,
-        opacity: 0.15,
-        shininess: 200,
-        specular: new THREE.Color(1, 1, 1),
-        side: THREE.DoubleSide
-      }),
-      'lilac-pink': new THREE.MeshPhongMaterial({
-        color: '#ffb3d9',
-        transparent: true,
-        opacity: 0.25,
-        shininess: 200,
-        specular: new THREE.Color(1, 0.8, 0.9)
-      }),
-      'sapphire-blue': new THREE.MeshPhongMaterial({
-        color: '#4169e1',
-        transparent: true,
-        opacity: 0.25,
-        shininess: 200,
-        specular: new THREE.Color(0.4, 0.6, 1)
-      })
-    }
-  }), [])
   
   // Subtle rotation for visual interest
   useFrame((state) => {
@@ -169,7 +138,13 @@ function RichardMilleRM75({ variant }) {
   return (
     <group ref={watchRef} scale={0.35}>
       {/* Main Case - Authentic Tonneau Shape */}
-      <mesh geometry={tonneauGeometry} material={materials.case} />
+      <mesh geometry={tonneauGeometry}>
+        <meshPhongMaterial
+          color="#1a1a1a"
+          shininess={100}
+          specular={new THREE.Color(0.2, 0.2, 0.2)}
+        />
+      </mesh>
       
       {/* Case Back */}
       <mesh position={[0, 0, -0.25]}>
@@ -212,7 +187,34 @@ function RichardMilleRM75({ variant }) {
           })(),
           { depth: 0.15, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02 }
         ]} />
-        {materials.crystal[variant]}
+        {variant === 'clear-sapphire' && (
+          <meshPhongMaterial
+            color="#ffffff"
+            transparent
+            opacity={0.15}
+            shininess={200}
+            specular={new THREE.Color(1, 1, 1)}
+            side={THREE.DoubleSide}
+          />
+        )}
+        {variant === 'lilac-pink' && (
+          <meshPhongMaterial
+            color="#ffb3d9"
+            transparent
+            opacity={0.25}
+            shininess={200}
+            specular={new THREE.Color(1, 0.8, 0.9)}
+          />
+        )}
+        {variant === 'sapphire-blue' && (
+          <meshPhongMaterial
+            color="#4169e1"
+            transparent
+            opacity={0.25}
+            shininess={200}
+            specular={new THREE.Color(0.4, 0.6, 1)}
+          />
+        )}
       </mesh>
       
       {/* Movement Architecture */}
@@ -220,13 +222,13 @@ function RichardMilleRM75({ variant }) {
         {/* Main Bridge */}
         <mesh position={[0, 0.3, 0]}>
           <boxGeometry args={[1.2, 0.08, 0.02]} />
-          <meshPhongMaterial color="#1a1a1a" metalness={0.9} />
+          <meshPhongMaterial color="#1a1a1a" />
         </mesh>
         
         {/* Secondary Bridges */}
         <mesh position={[0, -0.2, 0]}>
           <boxGeometry args={[1.0, 0.06, 0.02]} />
-          <meshPhongMaterial color="#1a1a1a" metalness={0.9} />
+          <meshPhongMaterial color="#1a1a1a" />
         </mesh>
       </group>
       
@@ -259,7 +261,7 @@ function RichardMilleRM75({ variant }) {
       ].map(([x, y], i) => (
         <mesh key={i} position={[x, y, 0.26]}>
           <cylinderGeometry args={[0.03, 0.03, 0.02, 6]} />
-          <meshPhongMaterial color="#c0c0c0" metalness={0.95} />
+          <meshPhongMaterial color="#c0c0c0" shininess={95} />
         </mesh>
       ))}
       
