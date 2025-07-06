@@ -1,7 +1,7 @@
 import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
-import SimpleWatchShowcase from './components/SimpleWatchShowcase'
+import LuxuryWatchShowcase from './components/LuxuryWatchShowcase'
 import SupabaseDataLayer from './components/SupabaseDataLayer'
 import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
@@ -15,19 +15,20 @@ function App() {
       <div className="app-container">
         <Canvas
         shadows
-        dpr={[1, 2]}
-        camera={{ position: [0, 2, 15], fov: 35 }}
+        dpr={[1, Math.min(window.devicePixelRatio, 2)]}
+        camera={{ position: [0, 1, 8], fov: 45 }}
         gl={{
           powerPreference: "high-performance",
-          alpha: true,
-          antialias: true,
+          alpha: false,
+          antialias: window.innerWidth < 768 ? false : true,
           stencil: false,
           depth: true,
-          logarithmicDepthBuffer: true,
+          logarithmicDepthBuffer: false,
         }}
+        performance={{ min: 0.5 }}
       >
         <Suspense fallback={null}>
-          <SimpleWatchShowcase 
+          <LuxuryWatchShowcase 
             variant={selectedVariant}
           />
           {dataMode && <SupabaseDataLayer variant={selectedVariant} />}

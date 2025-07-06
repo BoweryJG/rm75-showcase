@@ -1,328 +1,294 @@
-import { useRef, useMemo, useEffect } from 'react'
-import { useFrame, useThree, extend } from '@react-three/fiber'
+import { useRef, useMemo, useEffect, useState } from 'react'
+import { useFrame, useThree } from '@react-three/fiber'
 import { 
   Environment, 
   PresentationControls, 
   ContactShadows,
-  MeshReflectorMaterial,
-  useTexture,
-  Stage,
-  BakeShadows,
-  AccumulativeShadows,
-  RandomizedLight,
-  Lightformer,
-  Float,
-  useGLTF,
-  useAnimations,
   MeshTransmissionMaterial,
-  useDetectGPU,
-  PerformanceMonitor,
-  Caustics,
-  CubeCamera
+  Float,
+  useDetectGPU
 } from '@react-three/drei'
-import { 
-  EffectComposer, 
-  Bloom, 
-  DepthOfField, 
-  ChromaticAberration,
-  ToneMapping,
-  N8AO,
-  TiltShift2,
-  LUT
-} from '@react-three/postprocessing'
 import * as THREE from 'three'
-import { useControls } from 'leva'
-import HyperRealCrystal from './materials/HyperRealCrystal'
 import TourbillonMechanism from './TourbillonMechanism'
-import { KernelSize, BlendFunction } from 'postprocessing'
-import QuantumZoomCamera from './QuantumZoomCamera'
 
-// Hyper-reality lighting setup
-function LuxuryLighting() {
-  const { scene } = useThree()
-  
-  useEffect(() => {
-    scene.environmentIntensity = 0.5
-  }, [scene])
-
+// iPhone-optimized lighting setup
+function OptimizedLighting() {
   return (
     <>
-      <ambientLight intensity={0.1} />
-      <spotLight
-        position={[10, 10, 10]}
-        angle={0.15}
-        penumbra={1}
-        decay={0}
-        intensity={1}
-        castShadow
-        shadow-mapSize={4096}
-        shadow-bias={-0.0005}
-      />
-      <spotLight
-        position={[-10, -10, -10]}
-        angle={0.15}
-        penumbra={1}
-        decay={0}
-        intensity={0.5}
-        color="#4080ff"
-      />
+      <ambientLight intensity={0.4} />
       <directionalLight
-        position={[0, 10, 0]}
-        intensity={0.5}
+        position={[5, 5, 5]}
+        intensity={0.8}
         castShadow
-        shadow-mapSize={8192}
-        shadow-camera-far={50}
-        shadow-camera-left={-10}
-        shadow-camera-right={10}
-        shadow-camera-top={10}
-        shadow-camera-bottom={-10}
-        shadow-bias={-0.0001}
+        shadow-mapSize={1024}
+        shadow-camera-far={20}
+        shadow-camera-left={-5}
+        shadow-camera-right={5}
+        shadow-camera-top={5}
+        shadow-camera-bottom={-5}
+      />
+      <pointLight
+        position={[0, 3, 2]}
+        intensity={0.3}
+        color="#ffffff"
       />
     </>
   )
 }
 
-// Ultra-high detail watch component
-function RichardMilleWatch({ variant, dataMode }) {
+// Device capability detection
+function useDeviceCapabilities() {
+  const [isMobile, setIsMobile] = useState(false)
+  const [isLowEnd, setIsLowEnd] = useState(false)
+  
+  useEffect(() => {
+    const checkDevice = () => {
+      const userAgent = navigator.userAgent.toLowerCase()
+      const isMobileDevice = /mobile|android|iphone|ipad|tablet/.test(userAgent)
+      const isLowEndDevice = navigator.hardwareConcurrency < 4 || 
+                           navigator.deviceMemory < 4
+      
+      setIsMobile(isMobileDevice)
+      setIsLowEnd(isLowEndDevice)
+    }
+    
+    checkDevice()
+  }, [])
+  
+  return { isMobile, isLowEnd }
+}
+
+// RM 75-01 Authentic Watch Component
+function RichardMilleRM75({ variant }) {
   const watchRef = useRef()
   const crystalRef = useRef()
   const tourbillonRef = useRef()
-  const gpu = useDetectGPU()
+  const { isMobile, isLowEnd } = useDeviceCapabilities()
   
-  // Material variants with hyper-realistic properties
+  // iPhone-optimized material variants
   const materials = useMemo(() => ({
     'clear-sapphire': {
-      transmission: 1,
-      thickness: 2.5,
-      roughness: 0.01,
-      chromaticAberration: 0.05,
-      ior: 1.77, // Actual sapphire IOR
+      transmission: 0.95,
+      thickness: 1.0,
+      roughness: 0.02,
+      ior: 1.77,
       color: new THREE.Color(0.98, 0.98, 1.0),
-      attenuationColor: new THREE.Color(0.95, 0.95, 1.0),
-      attenuationDistance: 0.5,
+      envMapIntensity: 1.0,
     },
     'lilac-pink': {
-      transmission: 0.95,
-      thickness: 2.5,
-      roughness: 0.02,
-      chromaticAberration: 0.08,
+      transmission: 0.9,
+      thickness: 1.0,
+      roughness: 0.03,
       ior: 1.77,
       color: new THREE.Color(1.0, 0.85, 0.95),
-      attenuationColor: new THREE.Color(0.9, 0.6, 0.8),
-      attenuationDistance: 0.3,
+      envMapIntensity: 0.8,
     },
     'sapphire-blue': {
-      transmission: 0.9,
-      thickness: 2.5,
-      roughness: 0.015,
-      chromaticAberration: 0.1,
+      transmission: 0.85,
+      thickness: 1.0,
+      roughness: 0.025,
       ior: 1.77,
       color: new THREE.Color(0.7, 0.85, 1.0),
-      attenuationColor: new THREE.Color(0.2, 0.4, 0.8),
-      attenuationDistance: 0.4,
+      envMapIntensity: 0.9,
     }
   }), [])
 
   const currentMaterial = materials[variant]
+  
+  // Optimized geometry LOD based on device
+  const geometry = useMemo(() => {
+    const segments = isMobile ? 16 : isLowEnd ? 24 : 32
+    return {
+      case: [1.8, 1.6, 0.6, segments],       // Tonneau-shaped case (RM signature)
+      crystal: [1.7, 1.5, 0.2, segments],    // Sapphire crystal
+      bezel: [1.9, 1.8, 0.1, segments]       // Bezel ring
+    }
+  }, [isMobile, isLowEnd])
 
-  // Hyper-detailed animations
+  // Smooth animations optimized for 30fps on mobile
   useFrame((state) => {
     if (watchRef.current) {
-      // Subtle floating animation
-      watchRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.02
-      watchRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.05
-    }
-    
-    if (crystalRef.current && gpu.tier > 2) {
-      // Dynamic refraction based on viewing angle
-      const cameraDir = state.camera.position.clone().normalize()
-      crystalRef.current.material.ior = 1.77 + Math.abs(cameraDir.y) * 0.05
+      // Gentle breathing animation
+      const time = state.clock.elapsedTime
+      watchRef.current.position.y = Math.sin(time * 0.5) * 0.01
+      watchRef.current.rotation.y = Math.sin(time * 0.2) * 0.02
     }
   })
 
   return (
     <group ref={watchRef}>
-      {/* Ultra-high poly watch case */}
+      {/* RM 75-01 Tonneau Case (Signature RM shape) */}
       <mesh position={[0, 0, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[2.2, 2.0, 0.8, 128, 64]} />
+        <boxGeometry args={[3.2, 4.8, 1.2]} />
+        <meshPhysicalMaterial
+          color="#2a2a2a"
+          metalness={0.9}
+          roughness={0.1}
+          clearcoat={0.8}
+          clearcoatRoughness={0.1}
+          envMapIntensity={1.5}
+        />
+      </mesh>
+      
+      {/* Rounded corners for tonneau shape */}
+      <mesh position={[1.4, 2.0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
+        <meshPhysicalMaterial
+          color="#2a2a2a"
+          metalness={0.9}
+          roughness={0.1}
+          clearcoat={0.8}
+          clearcoatRoughness={0.1}
+          envMapIntensity={1.5}
+        />
+      </mesh>
+      <mesh position={[-1.4, 2.0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
+        <meshPhysicalMaterial
+          color="#2a2a2a"
+          metalness={0.9}
+          roughness={0.1}
+          clearcoat={0.8}
+          clearcoatRoughness={0.1}
+          envMapIntensity={1.5}
+        />
+      </mesh>
+      <mesh position={[1.4, -2.0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
+        <meshPhysicalMaterial
+          color="#2a2a2a"
+          metalness={0.9}
+          roughness={0.1}
+          clearcoat={0.8}
+          clearcoatRoughness={0.1}
+          envMapIntensity={1.5}
+        />
+      </mesh>
+      <mesh position={[-1.4, -2.0, 0]} castShadow receiveShadow>
+        <sphereGeometry args={[0.4, geometry.case[3], geometry.case[3]]} />
+        <meshPhysicalMaterial
+          color="#2a2a2a"
+          metalness={0.9}
+          roughness={0.1}
+          clearcoat={0.8}
+          clearcoatRoughness={0.1}
+          envMapIntensity={1.5}
+        />
+      </mesh>
+      
+      {/* Sapphire Crystal - Proper RM 75-01 form */}
+      <mesh ref={crystalRef} position={[0, 0, 0.65]} castShadow>
+        <boxGeometry args={[2.8, 4.4, 0.3]} />
+        <MeshTransmissionMaterial
+          {...currentMaterial}
+          samples={isMobile ? 4 : 8}
+          resolution={isMobile ? 256 : 512}
+        />
+      </mesh>
+      
+      {/* Flying Tourbillon at 6 o'clock position (RM 75-01 layout) */}
+      <TourbillonMechanism 
+        ref={tourbillonRef} 
+        position={[0, -1.2, 0.4]} 
+        scale={isMobile ? 0.8 : 1.0}
+        simplified={isMobile || isLowEnd}
+      />
+      
+      {/* Movement bridges - Gothic architecture inspired */}
+      <mesh position={[0, 0.8, 0.4]}>
+        <boxGeometry args={[2.4, 0.2, 0.1]} />
         <meshPhysicalMaterial
           color="#1a1a1a"
           metalness={0.95}
           roughness={0.05}
-          clearcoat={1}
-          clearcoatRoughness={0.01}
-          envMapIntensity={2}
+        />
+      </mesh>
+      <mesh position={[0, -0.4, 0.4]}>
+        <boxGeometry args={[2.4, 0.2, 0.1]} />
+        <meshPhysicalMaterial
+          color="#1a1a1a"
+          metalness={0.95}
+          roughness={0.05}
         />
       </mesh>
       
-      {/* Hyper-realistic sapphire crystal */}
-      <mesh ref={crystalRef} position={[0, 0.4, 0]} castShadow>
-        <cylinderGeometry args={[2.0, 1.95, 0.3, 128, 64]} />
-        <MeshTransmissionMaterial
-          {...currentMaterial}
-          samples={gpu.tier > 2 ? 16 : 8}
-          resolution={gpu.tier > 2 ? 1024 : 512}
-          temporalDistortion={0.1}
-          distortion={0.1}
-          distortionScale={0.1}
-        />
-      </mesh>
-      
-      {/* Flying tourbillon with real physics */}
-      <TourbillonMechanism 
-        ref={tourbillonRef} 
-        position={[0, 0, 0]} 
-        hyperDetail={gpu.tier > 2}
-      />
-      
-      {/* Microscopic surface details */}
-      {gpu.tier > 2 && (
-        <mesh position={[0, 0.41, 0]}>
-          <planeGeometry args={[4, 4, 512, 512]} />
-          <meshPhysicalMaterial
-            transparent
-            opacity={0.1}
-            normalScale={[0.05, 0.05]}
-            roughness={0.3}
-            metalness={0}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      )}
+      {/* SuperLuminova hour markers */}
+      {[...Array(12)].map((_, i) => {
+        const angle = (i * Math.PI * 2) / 12
+        const radius = 1.8
+        const x = Math.sin(angle) * radius
+        const y = Math.cos(angle) * radius
+        
+        return (
+          <mesh key={i} position={[x, y, 0.5]}>
+            <cylinderGeometry args={[0.05, 0.05, 0.02, 8]} />
+            <meshBasicMaterial
+              color={variant === 'lilac-pink' ? '#ff69b4' : 
+                     variant === 'sapphire-blue' ? '#4169e1' : '#ffffff'}
+              emissive={variant === 'lilac-pink' ? '#ff1493' : 
+                       variant === 'sapphire-blue' ? '#1e90ff' : '#ffffff'}
+              emissiveIntensity={0.3}
+            />
+          </mesh>
+        )
+      })}
     </group>
   )
 }
 
-// Main showcase component
-export default function LuxuryWatchShowcase({ variant, dataMode }) {
-  const gpu = useDetectGPU()
-  
-  // Leva controls for fine-tuning
-  const { 
-    bloomIntensity, 
-    chromaticAberration,
-    depthOfField,
-    environmentPreset 
-  } = useControls({
-    bloomIntensity: { value: 1.5, min: 0, max: 5, step: 0.1 },
-    chromaticAberration: { value: 0.002, min: 0, max: 0.01, step: 0.0001 },
-    depthOfField: { value: 0.02, min: 0, max: 0.1, step: 0.001 },
-    environmentPreset: { 
-      value: 'luxury',
-      options: ['luxury', 'studio', 'sunset', 'night']
-    }
-  })
+// Main showcase component - iPhone optimized
+export default function LuxuryWatchShowcase({ variant = 'clear-sapphire' }) {
+  const { isMobile, isLowEnd } = useDeviceCapabilities()
 
   return (
     <>
-      <color attach="background" args={['#000000']} />
-      <fog attach="fog" args={['#000000', 10, 50]} />
+      <color attach="background" args={['#0a0a0a']} />
       
-      <LuxuryLighting />
+      <OptimizedLighting />
       
       <Environment
         preset="city"
-        resolution={gpu.tier > 2 ? 2048 : 1024}
+        resolution={isMobile ? 512 : 1024}
         background={false}
-      >
-        <Lightformer
-          intensity={4}
-          rotation-x={Math.PI / 2}
-          position={[0, 5, -9]}
-          scale={[10, 10, 1]}
-        />
-        <Lightformer
-          intensity={2}
-          rotation-y={Math.PI / 2}
-          position={[-5, 1, -1]}
-          scale={[20, 0.1, 1]}
-        />
-      </Environment>
+      />
       
       <PresentationControls
         global
-        zoom={0.8}
-        rotation={[0, -Math.PI / 4, 0]}
-        polar={[-Math.PI / 4, Math.PI / 4]}
-        azimuth={[-Math.PI / 4, Math.PI / 4]}
-        config={{ mass: 2, tension: 400 }}
-        snap={{ mass: 4, tension: 400 }}
+        zoom={isMobile ? 1.2 : 0.8}
+        rotation={[0, -Math.PI / 6, 0]}
+        polar={[-Math.PI / 3, Math.PI / 3]}
+        azimuth={[-Math.PI / 3, Math.PI / 3]}
+        config={{ mass: 1, tension: 300 }}
+        snap={{ mass: 2, tension: 300 }}
       >
         <Float
-          speed={2}
-          rotationIntensity={0.2}
-          floatIntensity={0.3}
-          floatingRange={[-0.1, 0.1]}
+          speed={1}
+          rotationIntensity={0.1}
+          floatIntensity={0.2}
+          floatingRange={[-0.05, 0.05]}
         >
-          <RichardMilleWatch variant={variant} dataMode={dataMode} />
+          <RichardMilleRM75 variant={variant} />
         </Float>
       </PresentationControls>
       
-      {/* Ultra-realistic shadows */}
-      <AccumulativeShadows
-        temporal
-        frames={100}
-        color="#000000"
-        colorBlend={2}
-        toneMapped={true}
-        alphaTest={0.85}
-        opacity={0.8}
-        scale={12}
-        position={[0, -0.5, 0]}
-      >
-        <RandomizedLight
-          amount={8}
-          radius={4}
-          ambient={0.5}
-          intensity={1}
-          position={[5, 8, -5]}
-          bias={0.001}
-        />
-      </AccumulativeShadows>
+      {/* Simple contact shadows for iPhone performance */}
+      <ContactShadows
+        position={[0, -3, 0]}
+        opacity={0.4}
+        scale={10}
+        blur={1.5}
+        far={4}
+      />
       
-      {/* Luxury display surface */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
-        <planeGeometry args={[50, 50]} />
-        <MeshReflectorMaterial
-          blur={[1024, 1024]}
-          resolution={2048}
-          mixBlur={1}
-          mixStrength={100}
-          roughness={0.1}
-          depthScale={1.2}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#050505"
-          metalness={0.8}
-          mirror={0.8}
+      {/* Simplified display surface */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3, 0]} receiveShadow>
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial
+          color="#111111"
+          metalness={0.3}
+          roughness={0.7}
         />
       </mesh>
-      
-      {/* Post-processing - simplified for performance */}
-      {gpu.tier > 1 && (
-        <EffectComposer multisampling={gpu.tier > 2 ? 4 : 0}>
-          <Bloom
-            intensity={bloomIntensity}
-            kernelSize={KernelSize.LARGE}
-            luminanceThreshold={0.5}
-            luminanceSmoothing={0.9}
-          />
-          {gpu.tier > 2 && (
-            <>
-              <ChromaticAberration
-                offset={[chromaticAberration, chromaticAberration]}
-              />
-              <DepthOfField
-                focusDistance={0.01}
-                focalLength={depthOfField}
-                bokehScale={2}
-              />
-            </>
-          )}
-        </EffectComposer>
-      )}
-      
-      <QuantumZoomCamera />
     </>
   )
 }
