@@ -4,155 +4,137 @@ import {
   PresentationControls, 
   Environment,
   ContactShadows,
-  Html,
-  useGLTF,
-  Box,
-  Sphere,
-  Cylinder
+  MeshReflectorMaterial,
+  Float
 } from '@react-three/drei'
 import * as THREE from 'three'
+import TourbillonMechanism from './TourbillonMechanism'
 
-// Simple watch model component
-function WatchModel({ variant }) {
-  const meshRef = useRef()
-  const [hovered, setHovered] = useState(false)
-
-  // Rotate the watch continuously
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.002
-    }
-  })
-
-  // Define colors for each variant
-  const colors = {
+// Watch component with proper scale
+function Watch({ variant }) {
+  const watchRef = useRef()
+  const crystalRef = useRef()
+  
+  // Material variants
+  const materials = {
     'clear-sapphire': {
-      case: '#1a1a1a',
-      crystal: '#e3f2fd',
-      strap: '#263238'
+      caseColor: '#1a1a1a',
+      crystalColor: '#ffffff',
+      crystalOpacity: 0.3,
+      emissive: '#000000'
     },
     'lilac-pink': {
-      case: '#2d2d2d',
-      crystal: '#fce4ec',
-      strap: '#880e4f'
+      caseColor: '#2d1a2d',
+      crystalColor: '#ffb3d9',
+      crystalOpacity: 0.4,
+      emissive: '#4a0e4e'
     },
     'sapphire-blue': {
-      case: '#0d47a1',
-      crystal: '#bbdefb',
-      strap: '#1565c0'
+      caseColor: '#0a1929',
+      crystalColor: '#64b5f6',
+      crystalOpacity: 0.4,
+      emissive: '#001e3c'
     }
   }
-
-  const currentColors = colors[variant] || colors['clear-sapphire']
-
+  
+  const currentMaterial = materials[variant] || materials['clear-sapphire']
+  
+  // Subtle rotation
+  useFrame((state) => {
+    if (watchRef.current) {
+      watchRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1
+    }
+  })
+  
   return (
-    <group ref={meshRef} scale={hovered ? 1.1 : 1}>
-      {/* Watch Case */}
-      <mesh 
-        castShadow 
-        receiveShadow
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
-      >
-        <cylinderGeometry args={[1.2, 1.1, 0.3, 64]} />
-        <meshStandardMaterial 
-          color={currentColors.case}
+    <group ref={watchRef} scale={2}>
+      {/* Watch case - smaller for better initial view */}
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1, 0.95, 0.3, 64, 1]} />
+        <meshPhysicalMaterial 
+          color={currentMaterial.caseColor}
           metalness={0.9}
           roughness={0.1}
+          clearcoat={1}
+          clearcoatRoughness={0.01}
+          emissive={currentMaterial.emissive}
+          emissiveIntensity={0.1}
         />
       </mesh>
-
+      
+      {/* Watch bezel */}
+      <mesh position={[0, 0.15, 0]} castShadow>
+        <torusGeometry args={[0.95, 0.05, 16, 64]} />
+        <meshStandardMaterial 
+          color="#FFD700"
+          metalness={0.95}
+          roughness={0.05}
+        />
+      </mesh>
+      
       {/* Crystal */}
-      <mesh position={[0, 0.16, 0]} castShadow>
-        <cylinderGeometry args={[1.15, 1.15, 0.05, 64]} />
+      <mesh ref={crystalRef} position={[0, 0.15, 0]} castShadow>
+        <cylinderGeometry args={[0.9, 0.9, 0.05, 64]} />
         <meshPhysicalMaterial
-          color={currentColors.crystal}
-          transmission={0.9}
-          opacity={0.3}
+          color={currentMaterial.crystalColor}
           transparent
+          opacity={currentMaterial.crystalOpacity}
+          transmission={0.9}
+          thickness={0.5}
           roughness={0}
           metalness={0}
           clearcoat={1}
           clearcoatRoughness={0}
           ior={1.5}
-          thickness={0.5}
+          reflectivity={0.5}
         />
       </mesh>
-
-      {/* Watch Face */}
-      <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[1.1, 1.1, 0.01, 64]} />
+      
+      {/* Watch face */}
+      <mesh position={[0, 0.1, 0]} receiveShadow>
+        <cylinderGeometry args={[0.89, 0.89, 0.01, 64]} />
         <meshStandardMaterial 
           color="#000000"
           metalness={0.5}
           roughness={0.5}
         />
       </mesh>
-
+      
       {/* Hour markers */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i * Math.PI * 2) / 12
+      {Array.from({ length: 12 }, (_, i) => {
+        const angle = (i / 12) * Math.PI * 2
+        const x = Math.sin(angle) * 0.75
+        const z = Math.cos(angle) * 0.75
         return (
-          <mesh
-            key={i}
-            position={[
-              Math.sin(angle) * 0.9,
-              0.11,
-              Math.cos(angle) * 0.9
-            ]}
-          >
-            <boxGeometry args={[0.05, 0.01, 0.15]} />
-            <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
+          <mesh key={i} position={[x, 0.11, z]}>
+            <boxGeometry args={[0.05, 0.01, 0.02]} />
+            <meshStandardMaterial 
+              color="#FFD700"
+              metalness={0.9}
+              roughness={0.1}
+              emissive="#FFD700"
+              emissiveIntensity={0.3}
+            />
           </mesh>
         )
       })}
-
-      {/* Center */}
-      <mesh position={[0, 0.12, 0]}>
-        <cylinderGeometry args={[0.05, 0.05, 0.05, 32]} />
-        <meshStandardMaterial color="#FFD700" metalness={0.9} roughness={0.1} />
-      </mesh>
-
-      {/* Simple Tourbillon */}
-      <group position={[0, 0.11, 0]}>
-        <mesh>
-          <torusGeometry args={[0.3, 0.02, 16, 32]} />
-          <meshStandardMaterial color="#c0c0c0" metalness={0.9} roughness={0.1} />
-        </mesh>
-      </group>
-
-      {/* Strap */}
-      <mesh position={[0, -0.15, 1.2]} castShadow>
-        <boxGeometry args={[0.8, 0.1, 2.5]} />
+      
+      {/* Simplified tourbillon at center */}
+      <TourbillonMechanism 
+        position={[0, 0.12, 0]} 
+        scale={0.5}
+        hyperDetail={false}
+      />
+      
+      {/* Watch crown */}
+      <mesh position={[1.05, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <cylinderGeometry args={[0.08, 0.08, 0.15, 32]} />
         <meshStandardMaterial 
-          color={currentColors.strap}
-          roughness={0.8}
-          metalness={0}
+          color="#FFD700"
+          metalness={0.9}
+          roughness={0.1}
         />
       </mesh>
-      <mesh position={[0, -0.15, -1.2]} castShadow>
-        <boxGeometry args={[0.8, 0.1, 2.5]} />
-        <meshStandardMaterial 
-          color={currentColors.strap}
-          roughness={0.8}
-          metalness={0}
-        />
-      </mesh>
-
-      {hovered && (
-        <Html position={[0, 2, 0]} center>
-          <div style={{
-            background: 'rgba(0,0,0,0.8)',
-            color: '#FFD700',
-            padding: '10px 20px',
-            borderRadius: '4px',
-            fontFamily: 'Inter, sans-serif',
-            whiteSpace: 'nowrap'
-          }}>
-            Richard Mille RM-75-01
-          </div>
-        </Html>
-      )}
     </group>
   )
 }
@@ -160,46 +142,78 @@ function WatchModel({ variant }) {
 export default function SimpleWatchShowcase({ variant = 'clear-sapphire' }) {
   return (
     <>
-      {/* Lighting */}
+      <color attach="background" args={['#0a0a0a']} />
+      <fog attach="fog" args={['#0a0a0a', 20, 50]} />
+      
+      {/* Lighting setup */}
       <ambientLight intensity={0.5} />
-      <spotLight
-        position={[10, 10, 10]}
-        angle={0.15}
-        penumbra={1}
-        decay={0}
-        intensity={1}
-        castShadow
+      <directionalLight 
+        position={[10, 10, 5]} 
+        intensity={1.5} 
+        castShadow 
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
       />
-      <directionalLight position={[-5, 5, -5]} intensity={0.5} />
-
-      {/* Environment */}
-      <Environment preset="city" />
-
+      <spotLight 
+        position={[0, 15, 0]} 
+        intensity={0.5} 
+        angle={0.3} 
+        penumbra={1} 
+        castShadow 
+      />
+      <pointLight position={[-10, 5, -10]} intensity={0.3} color="#88ccff" />
+      
+      {/* Environment for reflections */}
+      <Environment preset="city" resolution={256} background={false} />
+      
       {/* Watch with presentation controls */}
       <PresentationControls
         global
         zoom={0.8}
-        rotation={[0, -Math.PI / 4, 0]}
+        rotation={[0.2, -0.2, 0]}
         polar={[-Math.PI / 3, Math.PI / 3]}
-        azimuth={[-Math.PI / 4, Math.PI / 4]}
+        azimuth={[-Math.PI / 3, Math.PI / 3]}
+        config={{ mass: 1, tension: 200 }}
       >
-        <WatchModel variant={variant} />
+        <Float
+          speed={1.5}
+          rotationIntensity={0.3}
+          floatIntensity={0.5}
+          floatingRange={[-0.05, 0.05]}
+        >
+          <Watch variant={variant} />
+        </Float>
       </PresentationControls>
-
+      
       {/* Shadows */}
-      <ContactShadows
-        position={[0, -1.4, 0]}
-        opacity={0.75}
-        scale={10}
-        blur={2.5}
-        far={4}
+      <ContactShadows 
+        position={[0, -2, 0]} 
+        opacity={0.6} 
+        scale={10} 
+        blur={2} 
+        far={4} 
+        resolution={256}
         color="#000000"
       />
-
-      {/* Floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.4, 0]} receiveShadow>
-        <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#0a0a0a" />
+      
+      {/* Display surface */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
+        <planeGeometry args={[50, 50]} />
+        <MeshReflectorMaterial
+          blur={[300, 100]}
+          resolution={1024}
+          mixBlur={1}
+          mixStrength={80}
+          roughness={0.9}
+          depthScale={1.2}
+          minDepthThreshold={0.4}
+          maxDepthThreshold={1.4}
+          color="#0a0a0a"
+          metalness={0.5}
+        />
       </mesh>
     </>
   )

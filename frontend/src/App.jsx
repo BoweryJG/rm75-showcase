@@ -16,7 +16,7 @@ function App() {
         <Canvas
         shadows
         dpr={[1, 2]}
-        camera={{ position: [0, 0, 5], fov: 35 }}
+        camera={{ position: [0, 2, 15], fov: 35 }}
         gl={{
           powerPreference: "high-performance",
           alpha: true,
@@ -27,7 +27,7 @@ function App() {
         }}
       >
         <Suspense fallback={null}>
-          <LuxuryWatchShowcase 
+          <SimpleWatchShowcase 
             variant={selectedVariant}
           />
           {dataMode && <SupabaseDataLayer variant={selectedVariant} />}
