@@ -29,7 +29,6 @@ function App() {
         <Suspense fallback={null}>
           <LuxuryWatchShowcase 
             variant={selectedVariant}
-            dataMode={dataMode}
           />
           {dataMode && <SupabaseDataLayer variant={selectedVariant} />}
         </Suspense>
