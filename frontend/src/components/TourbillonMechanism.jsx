@@ -297,7 +297,7 @@ const TourbillonCage = ({ children }) => {
         <meshPhysicalMaterial
           color="#c0c0c0"
           metalness={0.9}
-          roughness={0.05!
+          roughness={0.05}
           clearcoat={1}
           clearcoatRoughness={0.02}
         />

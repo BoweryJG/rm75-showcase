@@ -3,7 +3,6 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Text, Box, Sphere, MeshTransmissionMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 import { useSupabase } from '../hooks/useSupabase';
-import { useWatchContext } from '../contexts/WatchContext';
 
 // Custom shader for holographic data projections
 const holographicShader = {
@@ -300,7 +299,7 @@ function TourbillonPulse({ position, color = '#ffffff', intensity = 1 }) {
 
 // Main SupabaseDataLayer component
 export default function SupabaseDataLayer({ variant = 'sapphire' }) {
-  const { currentWatch } = useWatchContext();
+  // const { currentWatch } = useWatchContext(); // Commented out - not implemented yet
   const { data, subscribeToChanges } = useSupabase();
   const [panels, setPanels] = useState([]);
   
