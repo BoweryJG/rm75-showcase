@@ -1,0 +1,605 @@
+/* McLaren RM 11-03 Watch Component Styles */
+
+:root {
+  --mclaren-orange: #FF8000;
+  --carbon-black: #1A1A1A;
+  --watch-white: #FFFFFF;
+  --watch-silver: #C0C0C0;
+  --deep-black: #0A0A0A;
+  --accent-red: #FF4500;
+  --crystal-blue: #E6F3FF;
+}
+
+.mclaren-watch-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  perspective: 1000px;
+}
+
+.watch-case {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  background: var(--carbon-black);
+  border-radius: 50px;
+  box-shadow: 
+    0 0 30px rgba(255, 128, 0, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.8),
+    0 20px 40px rgba(0, 0, 0, 0.6);
+  transform-style: preserve-3d;
+  animation: watchGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes watchGlow {
+  0% { box-shadow: 0 0 30px rgba(255, 128, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.8), 0 20px 40px rgba(0, 0, 0, 0.6); }
+  100% { box-shadow: 0 0 50px rgba(255, 128, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8), 0 20px 40px rgba(0, 0, 0, 0.6); }
+}
+
+.carbon-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(45deg, 
+      rgba(255, 255, 255, 0.03) 0px, 
+      rgba(255, 255, 255, 0.03) 2px, 
+      transparent 2px, 
+      transparent 4px
+    );
+  pointer-events: none;
+}
+
+.crown {
+  position: absolute;
+  top: 50%;
+  right: -15px;
+  width: 20px;
+  height: 30px;
+  background: linear-gradient(90deg, var(--watch-silver), #999);
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: all 0.2s ease;
+}
+
+.crown:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 10px rgba(255, 128, 0, 0.4);
+}
+
+.pusher {
+  position: absolute;
+  right: -10px;
+  width: 15px;
+  height: 20px;
+  background: linear-gradient(90deg, var(--watch-silver), #999);
+  border: none;
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pusher-top {
+  top: 30%;
+}
+
+.pusher-bottom {
+  bottom: 30%;
+}
+
+.pusher:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(255, 128, 0, 0.4);
+}
+
+.watch-dial {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  width: 300px;
+  height: 300px;
+  background: var(--watch-white);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.1),
+    0 0 30px rgba(255, 128, 0, 0.2);
+  overflow: hidden;
+}
+
+.sapphire-crystal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 30% 30%, rgba(230, 243, 255, 0.3) 0%, transparent 70%),
+    radial-gradient(circle at 70% 70%, rgba(230, 243, 255, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.mclaren-logo {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 20px;
+  z-index: 10;
+}
+
+.logo-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.hour-marker {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  width: 4px;
+  height: 30px;
+  transform-origin: 50% 140px;
+}
+
+.marker-line {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--watch-silver), #999);
+  border-radius: 2px;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+}
+
+.minute-marker {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  width: 2px;
+  height: 15px;
+  transform-origin: 50% 135px;
+}
+
+.marker-dot {
+  width: 100%;
+  height: 100%;
+  background: var(--watch-silver);
+  border-radius: 1px;
+}
+
+.subdial {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--mclaren-orange);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.1),
+    0 0 10px rgba(255, 128, 0, 0.3);
+}
+
+.subdial-3 {
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.subdial-6 {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.subdial-9 {
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+}
+
+.subdial-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.subdial-hand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: var(--mclaren-orange);
+  transform-origin: 50% 100%;
+  transform: translate(-50%, -100%);
+  border-radius: 1px;
+  transition: transform 0.1s ease;
+}
+
+.subdial-hand.seconds {
+  background: var(--accent-red);
+  animation: secondTick 1s infinite;
+}
+
+@keyframes secondTick {
+  0%, 90% { transform: translate(-50%, -100%) rotate(var(--angle, 0deg)); }
+  100% { transform: translate(-50%, -100%) rotate(var(--angle, 0deg)) scale(1.1); }
+}
+
+.subdial-marker {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  width: 1px;
+  height: 8px;
+  background: var(--watch-silver);
+  transform-origin: 50% 25px;
+  transform: translateX(-50%);
+}
+
+.subdial-label {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px;
+  font-weight: bold;
+  color: var(--mclaren-orange);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.power-reserve {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 30px;
+}
+
+.power-reserve-arc {
+  width: 100%;
+  height: 100%;
+}
+
+.power-label {
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 6px;
+  font-weight: bold;
+  color: var(--watch-silver);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.date-window {
+  position: absolute;
+  top: 50%;
+  right: 70px;
+  width: 20px;
+  height: 15px;
+  background: var(--watch-white);
+  border: 1px solid var(--watch-silver);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.date-number {
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--deep-black);
+}
+
+.hand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: 50% 100%;
+  z-index: 20;
+}
+
+.hour-hand {
+  transform: translate(-50%, -80px);
+}
+
+.hour-hand .hand-body {
+  width: 6px;
+  height: 80px;
+  background: linear-gradient(to top, var(--watch-silver), #999);
+  border-radius: 3px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.hour-hand .hand-tip {
+  width: 8px;
+  height: 15px;
+  background: var(--mclaren-orange);
+  border-radius: 4px;
+  margin: -3px -1px 0 -1px;
+  box-shadow: 0 0 3px rgba(255, 128, 0, 0.5);
+}
+
+.minute-hand {
+  transform: translate(-50%, -120px);
+}
+
+.minute-hand .hand-body {
+  width: 4px;
+  height: 120px;
+  background: linear-gradient(to top, var(--watch-silver), #999);
+  border-radius: 2px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.minute-hand .hand-tip {
+  width: 6px;
+  height: 20px;
+  background: var(--mclaren-orange);
+  border-radius: 3px;
+  margin: -3px -1px 0 -1px;
+  box-shadow: 0 0 3px rgba(255, 128, 0, 0.5);
+}
+
+.chrono-hand {
+  transform: translate(-50%, -130px);
+  z-index: 25;
+}
+
+.chrono-body {
+  width: 2px;
+  height: 130px;
+  background: var(--accent-red);
+  border-radius: 1px;
+  box-shadow: 0 0 3px rgba(255, 69, 0, 0.5);
+}
+
+.chrono-tip {
+  width: 4px;
+  height: 15px;
+  background: var(--accent-red);
+  border-radius: 2px;
+  margin: -2px -1px 0 -1px;
+  box-shadow: 0 0 5px rgba(255, 69, 0, 0.7);
+}
+
+.center-cap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, var(--mclaren-orange), var(--accent-red));
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 
+    0 0 10px rgba(255, 128, 0, 0.5),
+    inset 0 0 5px rgba(0, 0, 0, 0.3);
+  z-index: 30;
+}
+
+.model-marking {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--watch-silver);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+.watch-strap {
+  position: absolute;
+  width: 60px;
+  height: 150px;
+  background: var(--deep-black);
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 10px;
+  box-shadow: 
+    inset 0 0 10px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.strap-top {
+  top: -100px;
+  border-radius: 10px 10px 0 0;
+}
+
+.strap-bottom {
+  bottom: -100px;
+  border-radius: 0 0 10px 10px;
+}
+
+.strap-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    repeating-linear-gradient(0deg, 
+      transparent 0px, 
+      transparent 2px, 
+      rgba(255, 255, 255, 0.1) 2px, 
+      rgba(255, 255, 255, 0.1) 4px
+    );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .watch-case {
+    width: 300px;
+    height: 375px;
+    border-radius: 40px;
+  }
+  
+  .watch-dial {
+    top: 37px;
+    left: 37px;
+    width: 225px;
+    height: 225px;
+  }
+  
+  .subdial {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .subdial-3 {
+    right: 15px;
+  }
+  
+  .subdial-6 {
+    bottom: 15px;
+  }
+  
+  .subdial-9 {
+    left: 15px;
+  }
+  
+  .hour-hand {
+    transform: translate(-50%, -60px);
+  }
+  
+  .hour-hand .hand-body {
+    height: 60px;
+  }
+  
+  .minute-hand {
+    transform: translate(-50%, -90px);
+  }
+  
+  .minute-hand .hand-body {
+    height: 90px;
+  }
+  
+  .chrono-hand {
+    transform: translate(-50%, -100px);
+  }
+  
+  .chrono-body {
+    height: 100px;
+  }
+}
+
+@media (max-width: 480px) {
+  .watch-case {
+    width: 250px;
+    height: 312px;
+    border-radius: 30px;
+  }
+  
+  .watch-dial {
+    top: 31px;
+    left: 31px;
+    width: 188px;
+    height: 188px;
+  }
+  
+  .subdial {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .subdial-3 {
+    right: 12px;
+  }
+  
+  .subdial-6 {
+    bottom: 12px;
+  }
+  
+  .subdial-9 {
+    left: 12px;
+  }
+}
+
+/* High-performance animations */
+.hand,
+.subdial-hand,
+.chrono-hand {
+  will-change: transform;
+  transition: transform 0.05s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* 60fps smooth animations */
+@keyframes precision-tick {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.hand.smooth-animation {
+  animation: precision-tick 60s linear infinite;
+}
+
+/* Material effects */
+.watch-case::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  background: linear-gradient(45deg, 
+    transparent, 
+    rgba(255, 128, 0, 0.1), 
+    transparent, 
+    rgba(255, 128, 0, 0.1)
+  );
+  border-radius: 55px;
+  z-index: -1;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .watch-case {
+    border: 2px solid var(--mclaren-orange);
+  }
+  
+  .watch-dial {
+    border: 2px solid var(--deep-black);
+  }
+  
+  .hand {
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+  }
+}
