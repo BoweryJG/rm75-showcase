@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { WatchTiming, HandPosition, TimingHookConfig, WatchModel } from '../types/timing.types';
-import { MechanicalAccuracySimulator } from '../utils/mechanicalAccuracy';
-import { TimeSyncManager } from '../utils/timeSync';
-import { PerformanceMonitor } from '../utils/performanceMonitor';
+import { MechanicalAccuracySimulator } from '../lib/mechanicalAccuracy';
+import { TimeSyncManager } from '../lib/timeSync';
+import { PerformanceMonitor } from '../lib/performanceMonitor';
 
 interface UseWatchTimingProps {
   model: WatchModel;

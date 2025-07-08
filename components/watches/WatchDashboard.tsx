@@ -276,7 +276,7 @@ const WatchDashboard: React.FC<WatchDashboardProps> = ({
       {/* Background Canvas for 3D Effects */}
       <div className="absolute inset-0 z-0">
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 75 }}
+          camera={{ position: [0, 0, 3], fov: 50 }}
           dpr={[1, 2]}
           performance={{ min: 0.1 }}
           className="w-full h-full"
