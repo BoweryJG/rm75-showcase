@@ -1,0 +1,442 @@
+/* CSS Richard Mille RM 75-01 */
+.css-rm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  background: black;
+  padding: 20px;
+  position: relative;
+}
+
+.watch-container {
+  position: relative;
+  width: 300px;
+  height: 450px;
+  background: radial-gradient(ellipse at center, #2a2a2a, #1a1a1a);
+  border-radius: 40% / 20%;
+  box-shadow: 
+    inset 0 0 20px rgba(0,0,0,0.5),
+    0 0 40px rgba(255,255,255,0.1),
+    0 10px 30px rgba(0,0,0,0.5);
+  border: 4px solid #333;
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.03) 2px,
+      rgba(255,255,255,0.03) 4px
+    );
+}
+
+/* Case screws */
+.screw {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #e0e0e0, #a0a0a0);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 3px rgba(0,0,0,0.5),
+    0 1px 2px rgba(255,255,255,0.3);
+}
+
+.screw::before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 1px;
+  right: 1px;
+  height: 2px;
+  background: #333;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+}
+
+.screw::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 5px;
+  width: 2px;
+  height: 10px;
+  background: #333;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.5);
+}
+
+/* Screw positions */
+.screw[data-position="1"] { top: 15px; left: 15px; transform: rotate(20deg); }
+.screw[data-position="2"] { top: 15px; left: 50%; transform: translateX(-50%) rotate(45deg); }
+.screw[data-position="3"] { top: 15px; right: 15px; transform: rotate(70deg); }
+.screw[data-position="4"] { top: 50%; left: 15px; transform: translateY(-50%) rotate(15deg); }
+.screw[data-position="5"] { top: 50%; right: 15px; transform: translateY(-50%) rotate(90deg); }
+.screw[data-position="6"] { bottom: 15px; left: 15px; transform: rotate(10deg); }
+.screw[data-position="7"] { bottom: 15px; left: 50%; transform: translateX(-50%) rotate(60deg); }
+.screw[data-position="8"] { bottom: 15px; right: 15px; transform: rotate(30deg); }
+
+/* Crown and pushers */
+.crown-assembly {
+  position: absolute;
+  right: -25px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.crown {
+  width: 25px;
+  height: 40px;
+  background: linear-gradient(90deg, #c0c0c0, #e0e0e0, #c0c0c0);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 
+    0 2px 5px rgba(0,0,0,0.3),
+    inset 0 1px 2px rgba(255,255,255,0.3);
+  transition: transform 0.1s ease;
+}
+
+.crown:hover {
+  transform: translateX(-2px);
+}
+
+.crown:active {
+  transform: translateX(1px);
+}
+
+.crown-logo {
+  font-size: 8px;
+  font-weight: bold;
+  color: #333;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.pusher {
+  width: 18px;
+  height: 25px;
+  background: linear-gradient(90deg, #b0b0b0, #d0d0d0, #b0b0b0);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 
+    0 1px 3px rgba(0,0,0,0.3),
+    inset 0 1px 1px rgba(255,255,255,0.3);
+  transition: all 0.1s ease;
+}
+
+.pusher:hover {
+  background: linear-gradient(90deg, #c0c0c0, #e0e0e0, #c0c0c0);
+}
+
+.pusher:active {
+  transform: translateX(1px);
+  box-shadow: 
+    0 0 2px rgba(0,0,0,0.3),
+    inset 0 1px 1px rgba(0,0,0,0.2);
+}
+
+/* Dial */
+.dial {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
+  background: radial-gradient(ellipse at center, #1a1a1a, #000);
+  border-radius: 35% / 18%;
+  box-shadow: 
+    inset 0 0 20px rgba(0,0,0,0.8),
+    inset 0 0 5px rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+/* Hour markers */
+.hour-marker {
+  position: absolute;
+  width: 2px;
+  height: 15px;
+  background: #fff;
+  top: 10px;
+  left: 50%;
+  transform-origin: 0 135px;
+  opacity: 0.9;
+}
+
+.hour-marker .marker-inner {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, #fff, #ccc);
+  box-shadow: 0 0 2px rgba(255,255,255,0.5);
+}
+
+/* Decorative bars */
+.bar {
+  position: absolute;
+  height: 10px;
+  width: 85%;
+  background: linear-gradient(90deg, #ff3333, #ff6666, #ff3333);
+  border-radius: 10px;
+  left: 7.5%;
+  box-shadow: 
+    0 0 10px rgba(255,51,51,0.5),
+    inset 0 0 5px rgba(255,255,255,0.3);
+  opacity: 0.8;
+}
+
+.bar[data-index="1"] { top: 60px; transform: rotate(3deg); }
+.bar[data-index="2"] { top: 100px; transform: rotate(-2deg); }
+.bar[data-index="3"] { top: 140px; transform: rotate(1deg); }
+.bar[data-index="4"] { top: 180px; transform: rotate(-1deg); }
+.bar[data-index="5"] { top: 220px; transform: rotate(2deg); }
+
+/* Power reserve indicator */
+.power-reserve-indicator {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  text-align: center;
+}
+
+.power-label {
+  font-size: 8px;
+  color: #666;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.power-gauge {
+  width: 100%;
+  height: 4px;
+  background: #222;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+}
+
+.power-level {
+  height: 100%;
+  background: linear-gradient(90deg, #ff3333, #ff6666);
+  transition: width 0.5s ease;
+  box-shadow: 0 0 4px rgba(255,51,51,0.5);
+}
+
+/* Richard Mille branding */
+.rm-branding {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.rm-logo {
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 1px;
+  text-shadow: 0 0 2px rgba(255,255,255,0.5);
+}
+
+.model {
+  font-size: 8px;
+  color: #999;
+  margin-top: 2px;
+}
+
+/* Date window */
+.date-window {
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 25px;
+  background: #fff;
+  border: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.date-value {
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* Hands */
+.hand {
+  position: absolute;
+  transform-origin: bottom center;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  transition: none;
+}
+
+.hand.hour {
+  width: 6px;
+  height: 80px;
+  background: linear-gradient(to top, #fff 0%, #fff 70%, #ff3333 70%, #ff3333 100%);
+  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+  border-radius: 3px;
+}
+
+.hand.minute {
+  width: 4px;
+  height: 110px;
+  background: linear-gradient(to top, #eee 0%, #eee 75%, #ff3333 75%, #ff3333 100%);
+  box-shadow: 0 0 2px rgba(0,0,0,0.5);
+  border-radius: 2px;
+}
+
+.hand.second {
+  width: 2px;
+  height: 130px;
+  background: #ff3333;
+  box-shadow: 0 0 2px rgba(255,51,51,0.5);
+}
+
+.hand.second::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: -5px;
+  width: 12px;
+  height: 12px;
+  background: #ff3333;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.hand.chrono-second {
+  width: 2px;
+  height: 140px;
+  background: #00ff00;
+  box-shadow: 0 0 3px rgba(0,255,0,0.5);
+  z-index: 10;
+}
+
+.chrono-tip {
+  position: absolute;
+  bottom: 100%;
+  left: -4px;
+  width: 10px;
+  height: 10px;
+  background: #00ff00;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Center cap */
+.center-cap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #666, #333);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 3px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(255,255,255,0.2);
+  z-index: 20;
+}
+
+/* Straps */
+.strap {
+  width: 250px;
+  height: 80px;
+  background: linear-gradient(to right, #1a4d1a, #2d7a2d, #1a4d1a);
+  position: relative;
+  box-shadow: 
+    0 2px 10px rgba(0,0,0,0.3),
+    inset 0 1px 2px rgba(255,255,255,0.1);
+}
+
+.strap.top {
+  border-radius: 10px 10px 0 0;
+  background-image: 
+    linear-gradient(to right, #1a4d1a, #2d7a2d, #1a4d1a),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.1) 2px,
+      rgba(0,0,0,0.1) 4px
+    );
+}
+
+.strap.bottom {
+  border-radius: 0 0 10px 10px;
+  background-image: 
+    linear-gradient(to right, #1a4d1a, #2d7a2d, #1a4d1a),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.1) 2px,
+      rgba(0,0,0,0.1) 4px
+    );
+}
+
+/* Watch status display */
+.watch-status {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: #999;
+}
+
+.status-item {
+  display: flex;
+  gap: 5px;
+}
+
+.status-label {
+  opacity: 0.7;
+}
+
+.status-value {
+  color: #fff;
+  font-weight: bold;
+}
+
+.chrono-status .status-value {
+  color: #00ff00;
+}
+
+/* Animations */
+@keyframes tick {
+  0% { transform: translate(-50%, -100%) rotate(var(--angle)); }
+  100% { transform: translate(-50%, -100%) rotate(calc(var(--angle) + 360deg)); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .watch-container {
+    transform: scale(0.8);
+  }
+}
+
+/* Hover effects */
+.watch-container:hover .bar {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.watch-container:hover .hand.second {
+  box-shadow: 0 0 5px rgba(255,51,51,0.8);
+}

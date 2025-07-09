@@ -1,0 +1,398 @@
+/* Mobile Optimized Richard Mille Watch */
+.rm-mobile-container {
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.rm-mobile-watch {
+  position: relative;
+  width: min(80vw, 300px);
+  height: min(120vw, 450px);
+  will-change: transform;
+  transform-origin: center;
+}
+
+/* Case with hardware acceleration */
+.rm-case {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 30% 30%, #6a7f3a, #3a4c24),
+    linear-gradient(135deg, #5a6f34 0%, #3a4c24 100%);
+  border-radius: 40% / 20%;
+  box-shadow: 
+    inset 0 0 20px rgba(0,0,0,0.5),
+    0 0 30px rgba(27,255,102,0.2),
+    0 10px 40px rgba(0,0,0,0.6);
+  border: 3px solid #222;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimized screws */
+.rm-screw {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: 
+    radial-gradient(circle at 30% 30%, #e0e0e0, #999);
+  border-radius: 50%;
+  box-shadow: 
+    inset 0 0 3px rgba(0,0,0,0.5),
+    0 1px 2px rgba(255,255,255,0.3);
+}
+
+.rm-screw::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: 
+    linear-gradient(var(--rot, 45deg), transparent 45%, #333 45%, #333 55%, transparent 55%),
+    linear-gradient(calc(var(--rot, 45deg) + 90deg), transparent 45%, #333 45%, #333 55%, transparent 55%);
+}
+
+/* Screw positions with CSS variables */
+.rm-screw-1 { top: 8px; left: 8px; --rot: 20deg; }
+.rm-screw-2 { top: 8px; left: 50%; transform: translateX(-50%); --rot: 45deg; }
+.rm-screw-3 { top: 8px; right: 8px; --rot: 70deg; }
+.rm-screw-4 { top: 50%; left: 8px; transform: translateY(-50%); --rot: 15deg; }
+.rm-screw-5 { top: 50%; right: 8px; transform: translateY(-50%); --rot: 90deg; }
+.rm-screw-6 { bottom: 8px; left: 8px; --rot: 10deg; }
+.rm-screw-7 { bottom: 8px; left: 50%; transform: translateX(-50%); --rot: 60deg; }
+.rm-screw-8 { bottom: 8px; right: 8px; --rot: 30deg; }
+
+/* Dial */
+.rm-dial {
+  position: absolute;
+  inset: 20px;
+  background: 
+    radial-gradient(circle at center, #1a1a1a, #000);
+  border-radius: 35% / 18%;
+  box-shadow: 
+    inset 0 0 20px rgba(0,0,0,0.8),
+    inset 0 0 10px rgba(27,255,102,0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Bars container for better performance */
+.rm-bars-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rm-bar {
+  position: absolute;
+  height: 8px;
+  width: 90%;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    #1bff66 10%,
+    #2bff76 50%,
+    #1bff66 90%,
+    transparent 100%
+  );
+  border-radius: 10px;
+  left: 5%;
+  box-shadow: 
+    0 0 15px rgba(27,255,102,0.6),
+    inset 0 0 3px rgba(255,255,255,0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+.rm-bar-1 { top: 20%; transform: rotate(5deg); animation-delay: 0s; }
+.rm-bar-2 { top: 30%; transform: rotate(3deg); animation-delay: 0.2s; }
+.rm-bar-3 { top: 40%; transform: rotate(0deg); animation-delay: 0.4s; }
+.rm-bar-4 { top: 50%; transform: rotate(-2deg); animation-delay: 0.6s; }
+.rm-bar-5 { top: 60%; transform: rotate(-4deg); animation-delay: 0.8s; }
+
+/* Hour markers */
+.rm-markers {
+  position: absolute;
+  inset: 10%;
+  display: grid;
+  place-items: center;
+}
+
+.rm-marker {
+  position: absolute;
+  color: #1bff66;
+  font-size: clamp(10px, 3vw, 14px);
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(27,255,102,0.5);
+}
+
+.rm-marker-12 { top: 0; left: 50%; transform: translateX(-50%); }
+.rm-marker-3 { right: 0; top: 50%; transform: translateY(-50%); }
+.rm-marker-6 { bottom: 0; left: 50%; transform: translateX(-50%); }
+.rm-marker-9 { left: 0; top: 50%; transform: translateY(-50%); }
+
+/* Hands with GPU optimization */
+.rm-hand {
+  position: absolute;
+  transform-origin: bottom center;
+  top: 50%;
+  left: 50%;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.rm-hand-hour {
+  width: 6px;
+  height: 25%;
+  background: linear-gradient(to top, #fff, #ccc);
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+  border-radius: 3px;
+}
+
+.rm-hand-minute {
+  width: 4px;
+  height: 35%;
+  background: linear-gradient(to top, #eee, #aaa);
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  border-radius: 2px;
+}
+
+.rm-hand-second {
+  width: 2px;
+  height: 40%;
+  background: #ff3333;
+  box-shadow: 0 0 6px rgba(255,51,51,0.8);
+}
+
+.rm-hand-second::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: -5px;
+  width: 12px;
+  height: 12px;
+  background: #ff3333;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Center dot */
+.rm-center {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #666, #333);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 4px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(255,255,255,0.2);
+  z-index: 10;
+}
+
+/* Straps */
+.rm-strap {
+  position: absolute;
+  width: 85%;
+  height: 18%;
+  left: 7.5%;
+  background: 
+    linear-gradient(90deg, #0a3d0a, #1bff66 50%, #0a3d0a),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.2) 2px,
+      rgba(0,0,0,0.2) 4px
+    );
+  box-shadow: 
+    0 2px 10px rgba(0,0,0,0.5),
+    inset 0 1px 2px rgba(255,255,255,0.1);
+}
+
+.rm-strap-top {
+  bottom: 100%;
+  border-radius: 10px 10px 0 0;
+}
+
+.rm-strap-bottom {
+  top: 100%;
+  border-radius: 0 0 10px 10px;
+}
+
+/* Touch indicator */
+.rm-touch-indicator {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.rm-touch-ripple {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 2px solid rgba(27,255,102,0.5);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  from {
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  to {
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}
+
+/* Mobile controls */
+.rm-mobile-controls {
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  gap: 15px;
+  z-index: 20;
+}
+
+.rm-control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(27,255,102,0.1);
+  border: 2px solid #1bff66;
+  color: #1bff66;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.rm-control-btn:active {
+  transform: scale(0.95);
+  background: rgba(27,255,102,0.3);
+}
+
+.rm-control-reset {
+  font-size: 28px;
+}
+
+/* Performance indicator */
+.rm-performance {
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  color: #1bff66;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.rm-fps {
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-shadow: 0 0 5px rgba(27,255,102,0.5);
+}
+
+.rm-touch-hint {
+  opacity: 0.6;
+  font-size: 11px;
+  padding: 0 20px;
+}
+
+/* Responsive optimizations */
+@media (max-width: 480px) {
+  .rm-bar {
+    height: 6px;
+  }
+  
+  .rm-marker {
+    font-size: 10px;
+  }
+  
+  .rm-mobile-controls {
+    bottom: 10px;
+  }
+  
+  .rm-control-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+}
+
+/* High refresh rate displays */
+@media (min-resolution: 2dppx) {
+  .rm-hand-second {
+    transition: none;
+  }
+}
+
+/* Landscape optimization */
+@media (orientation: landscape) and (max-height: 600px) {
+  .rm-mobile-watch {
+    width: min(50vh, 300px);
+    height: min(75vh, 450px);
+  }
+  
+  .rm-mobile-controls {
+    right: 20px;
+    bottom: 50%;
+    transform: translateY(50%);
+    flex-direction: column;
+  }
+  
+  .rm-performance {
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+  }
+}
+
+/* Dark mode optimization */
+@media (prefers-color-scheme: dark) {
+  .rm-mobile-container {
+    background: #000;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .rm-bar {
+    animation: none;
+  }
+  
+  .rm-hand {
+    transition: none;
+  }
+  
+  .rm-touch-ripple {
+    animation: none;
+  }
+}
