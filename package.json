@@ -1,0 +1,44 @@
+{
+  "name": "richard-mille-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "analyze": "ANALYZE=true npm run build",
+    "type-check": "tsc --noEmit",
+    "build:production": "NODE_ENV=production next build",
+    "test:build": "npm run type-check && npm run lint && npm run build",
+    "clean": "rm -rf .next out dist",
+    "dev:debug": "NODE_OPTIONS='--inspect' next dev --turbopack",
+    "preview": "npm run build && npm run start"
+  },
+  "dependencies": {
+    "@next/bundle-analyzer": "^15.3.5",
+    "@react-three/drei": "^10.4.4",
+    "@react-three/fiber": "^9.2.0",
+    "@supabase/supabase-js": "^2.50.3",
+    "@types/three": "^0.178.0",
+    "@types/web": "^0.0.245",
+    "@vercel/analytics": "^1.5.0",
+    "framer-motion": "^12.23.0",
+    "next": "15.3.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.178.0",
+    "web-vitals": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
