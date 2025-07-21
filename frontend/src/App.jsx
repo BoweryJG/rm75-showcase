@@ -2,12 +2,10 @@ import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader } from '@react-three/drei'
 import LuxuryWatchShowcase from './components/LuxuryWatchShowcase'
-import SupabaseDataLayer from './components/SupabaseDataLayer'
 import ErrorBoundary from './components/ErrorBoundary'
 import './App.css'
 
 function App() {
-  const [dataMode, setDataMode] = useState(false)
   const [selectedVariant, setSelectedVariant] = useState('clear-sapphire')
 
   return (
@@ -31,7 +29,6 @@ function App() {
           <LuxuryWatchShowcase 
             variant={selectedVariant}
           />
-          {dataMode && <SupabaseDataLayer variant={selectedVariant} />}
         </Suspense>
       </Canvas>
       
@@ -55,17 +52,6 @@ function App() {
           >
             Sapphire Blue
           </button>
-        </div>
-        
-        <div className="mode-toggle">
-          <label>
-            <input 
-              type="checkbox" 
-              checked={dataMode}
-              onChange={(e) => setDataMode(e.target.checked)}
-            />
-            <span>Data Enhancement Mode</span>
-          </label>
         </div>
       </div>
       
